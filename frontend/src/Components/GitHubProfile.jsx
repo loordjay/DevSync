@@ -11,8 +11,9 @@ const GitHubProfile = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Inner async function to avoid async useEffect
     const fetchGitHubData = async () => {
+      if (!username) return;
+
       try {
         const backendUrl =
           import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
@@ -24,8 +25,8 @@ const GitHubProfile = () => {
         } else {
           setError(json.error || "Failed to fetch GitHub data");
         }
-      } catch (_err) {
-        console.error(_err);
+      } catch (err) {
+        console.error(err);
         setError("Server error");
       } finally {
         setLoading(false);
@@ -50,7 +51,7 @@ const GitHubProfile = () => {
               title={`${day.date}: ${day.contributionCount} contributions`}
               className="w-3 h-3 rounded-sm"
               style={{ backgroundColor: day.color || "#ebedf0" }}
-            ></div>
+            />
           ))}
         </div>
       ))}
@@ -72,7 +73,7 @@ const GitHubProfile = () => {
                   (count / Math.max(...Object.values(languages))) * 100
                 }%`,
               }}
-            ></div>
+            />
           </div>
         </div>
       ))}

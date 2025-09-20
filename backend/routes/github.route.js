@@ -1,5 +1,5 @@
 const express = require("express");
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const router = express.Router();
 
 // Helper function to run GraphQL query
@@ -8,10 +8,11 @@ const runGraphQL = async (query, variables = {}) => {
     method: "POST",
     headers: {
       Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ query, variables })
+    body: JSON.stringify({ query, variables }),
   });
+
   const data = await response.json();
   if (data.errors) throw new Error(JSON.stringify(data.errors));
   return data.data;
@@ -31,7 +32,12 @@ router.get("/:username", async (req, res) => {
           bio
           followers { totalCount }
           following { totalCount }
-          repositories(first: 100, privacy: PUBLIC, isFork: false, orderBy: {field: STARGAZERS, direction: DESC}) {
+          repositories(
+            first: 100,
+            privacy: PUBLIC,
+            isFork: false,
+            orderBy: {field: STARGAZERS, direction: DESC}
+          ) {
             nodes {
               name
               url
@@ -53,7 +59,6 @@ router.get("/:username", async (req, res) => {
               }
             }
             totalCommitContributions
-            totalRepositoryContributions
           }
         }
       }
@@ -71,7 +76,7 @@ router.get("/:username", async (req, res) => {
 
     // Aggregate languages
     const languages = {};
-    user.repositories.nodes.forEach(r => {
+    user.repositories.nodes.forEach((r) => {
       if (r.primaryLanguage?.name) {
         languages[r.primaryLanguage.name] = (languages[r.primaryLanguage.name] || 0) + 1;
       }
@@ -84,22 +89,22 @@ router.get("/:username", async (req, res) => {
         avatarUrl: user.avatarUrl,
         bio: user.bio,
         followers: user.followers.totalCount,
-        following: user.following.totalCount
+        following: user.following.totalCount,
       },
-      topRepos: topRepos.map(r => ({
+      topRepos: topRepos.map((r) => ({
         name: r.name,
         url: r.url,
         description: r.description,
         stars: r.stargazerCount,
         forks: r.forkCount,
-        language: r.primaryLanguage?.name || "Unknown"
+        language: r.primaryLanguage?.name || "Unknown",
       })),
       contributions: {
         totalContributions: user.contributionsCollection.contributionCalendar.totalContributions,
         totalCommits: user.contributionsCollection.totalCommitContributions,
-        weeks: user.contributionsCollection.contributionCalendar.weeks
+        weeks: user.contributionsCollection.contributionCalendar.weeks,
       },
-      languages
+      languages,
     });
   } catch (err) {
     console.error(err);
