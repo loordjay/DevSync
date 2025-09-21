@@ -1,5 +1,6 @@
 const express = require("express");
-const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const router = express.Router();
 
 // Helper function to run GraphQL query
@@ -33,10 +34,10 @@ router.get("/:username", async (req, res) => {
           followers { totalCount }
           following { totalCount }
           repositories(
-            first: 100,
+            first: 50,
             privacy: PUBLIC,
             isFork: false,
-            orderBy: {field: STARGAZERS, direction: DESC}
+            orderBy: { field: STARGAZERS, direction: DESC }
           ) {
             nodes {
               name
@@ -44,7 +45,14 @@ router.get("/:username", async (req, res) => {
               description
               stargazerCount
               forkCount
-              primaryLanguage { name }
+              languages(first: 5, orderBy: { field: SIZE, direction: DESC }) {
+                edges {
+                  size
+                  node {
+                    name
+                  }
+                }
+              }
             }
           }
           contributionsCollection {
@@ -72,14 +80,25 @@ router.get("/:username", async (req, res) => {
     // Aggregate top 6 repos by stars
     const topRepos = user.repositories.nodes
       .sort((a, b) => b.stargazerCount - a.stargazerCount)
-      .slice(0, 6);
+      .slice(0, 6)
+      .map((r) => ({
+        name: r.name,
+        url: r.url,
+        description: r.description,
+        stars: r.stargazerCount,
+        forks: r.forkCount,
+        languages: r.languages.edges.map((edge) => ({
+          name: edge.node.name,
+          size: edge.size,
+        })),
+      }));
 
-    // Aggregate languages
+    // Aggregate languages across all repos by size
     const languages = {};
-    user.repositories.nodes.forEach((r) => {
-      if (r.primaryLanguage?.name) {
-        languages[r.primaryLanguage.name] = (languages[r.primaryLanguage.name] || 0) + 1;
-      }
+    user.repositories.nodes.forEach((repo) => {
+      repo.languages.edges.forEach(({ node, size }) => {
+        languages[node.name] = (languages[node.name] || 0) + size;
+      });
     });
 
     res.json({
@@ -91,16 +110,10 @@ router.get("/:username", async (req, res) => {
         followers: user.followers.totalCount,
         following: user.following.totalCount,
       },
-      topRepos: topRepos.map((r) => ({
-        name: r.name,
-        url: r.url,
-        description: r.description,
-        stars: r.stargazerCount,
-        forks: r.forkCount,
-        language: r.primaryLanguage?.name || "Unknown",
-      })),
+      topRepos,
       contributions: {
-        totalContributions: user.contributionsCollection.contributionCalendar.totalContributions,
+        totalContributions:
+          user.contributionsCollection.contributionCalendar.totalContributions,
         totalCommits: user.contributionsCollection.totalCommitContributions,
         weeks: user.contributionsCollection.contributionCalendar.weeks,
       },

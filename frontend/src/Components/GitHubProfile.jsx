@@ -1,4 +1,3 @@
-// Components/GitHubProfile.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/Card";
@@ -58,27 +57,34 @@ const GitHubProfile = () => {
     </div>
   );
 
-  const renderLanguages = () => (
-    <div className="space-y-2">
-      {Object.entries(languages).map(([lang, count], idx) => (
-        <div key={idx}>
-          <p className="text-sm font-medium">
-            {lang} ({count})
-          </p>
-          <div className="w-full bg-gray-200 h-2 rounded">
-            <div
-              className="h-2 rounded bg-yellow-400"
-              style={{
-                width: `${
-                  (count / Math.max(...Object.values(languages))) * 100
-                }%`,
-              }}
-            />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  const renderLanguages = () => {
+    const totalSize = Object.values(languages).reduce(
+      (sum, val) => sum + val,
+      0
+    );
+
+    return (
+      <div className="space-y-2">
+        {Object.entries(languages)
+          .sort((a, b) => b[1] - a[1])
+          .map(([lang, size], idx) => (
+            <div key={idx}>
+              <p className="text-sm font-medium">
+                {lang} ({((size / totalSize) * 100).toFixed(1)}%)
+              </p>
+              <div className="w-full bg-gray-200 h-2 rounded">
+                <div
+                  className="h-2 rounded bg-yellow-400"
+                  style={{
+                    width: `${((size / totalSize) * 100).toFixed(1)}%`,
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+      </div>
+    );
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -141,8 +147,13 @@ const GitHubProfile = () => {
                 {repo.description || "No description"}
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                ⭐ {repo.stars} | 🍴 {repo.forks} | {repo.language || "Unknown"}
+                ⭐ {repo.stars} | 🍴 {repo.forks}
               </p>
+              {repo.languages.length > 0 && (
+                <p className="text-xs text-gray-400 mt-1">
+                  {repo.languages.map((l) => l.name).join(", ")}
+                </p>
+              )}
             </div>
           ))}
         </CardContent>
