@@ -16,6 +16,7 @@ import Register from "./Components/auth/Register";
 import Profile from "./Components/profile/Profile";
 import ProtectedRoute from "./Components/auth/ProtectedRoute";
 import Dashboard from "./Components/Dashboard";
+import FAQ from "./Components/FAQ";
 
 
 // Home component that contains the main landing page content
@@ -75,6 +76,12 @@ function Home() {
           </div>
         </ScrollRevealWrapper>
 
+        <ScrollRevealWrapper delay={0.2}>
+          <div id="FAQ">
+            <FAQ />
+          </div>
+        </ScrollRevealWrapper>
+
         <Footer />
       </main>
 
@@ -119,7 +126,6 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      
       <Route 
         path="/profile" 
         element={

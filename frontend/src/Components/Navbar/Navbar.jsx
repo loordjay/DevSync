@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Github, Home, Info, Sparkle, LogIn, UserPlus, UserCircle } from "lucide-react";
+import { Github, Home, Info, Sparkle, LogIn, UserPlus, UserCircle,HelpCircle } from "lucide-react";
 import { FloatingNav } from "../ui/floating-navbar";
 import { Phone } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -32,6 +32,12 @@ const navItems = [
     link: "#contact",
     icon: <Phone className="h-4 w-4" />,
   },
+  {
+    name: "FAQ",
+    link: "#faq",
+    icon: <HelpCircle className="h-4 w-4" />,
+  },
+  
 ];
 
 const Navbar = () => {
