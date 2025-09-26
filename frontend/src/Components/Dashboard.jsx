@@ -60,10 +60,18 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             {/* Row 1 */}
             <ProfileCard user={profile} className="col-span-1" />
-            <GitHubCard
-              githubUsername={profile.githubUsername}
-              className="col-span-1"
-            />
+
+            {profile.githubUsername ? (
+              <GitHubCard
+                githubUsername={profile.githubUsername}
+                className="col-span-1"
+              />
+            ) : (
+              <div className="col-span-1 p-4 border rounded-lg shadow-sm bg-gray-100 text-gray-500 flex items-center justify-center">
+                GitHub profile not linked
+              </div>
+            )}
+
             <StreakCard streak={profile.streak || 0} className="col-span-1" />
 
             {/* Row 2: Goals, Time Spent, Notes */}
