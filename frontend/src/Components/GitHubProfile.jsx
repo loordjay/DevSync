@@ -11,19 +11,19 @@ const GitHubProfile = () => {
 
   useEffect(() => {
     const fetchGitHubData = async () => {
-      if (!username) return;
+      if (!username) {
+        setError("No GitHub username provided");
+        setLoading(false);
+        return;
+      }
 
       try {
-        const backendUrl =
-          import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
         const res = await fetch(`${backendUrl}/api/github/${username}`);
         const json = await res.json();
 
-        if (res.ok) {
-          setData(json);
-        } else {
-          setError(json.error || "Failed to fetch GitHub data");
-        }
+        if (res.ok) setData(json);
+        else setError(json.error || "Failed to fetch GitHub data");
       } catch (err) {
         console.error(err);
         setError("Server error");
@@ -38,13 +38,15 @@ const GitHubProfile = () => {
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
-  const { profile, topRepos, contributions, languages } = data;
+  const { profile, topRepos, contributions, languages } = data || {};
+
+  if (!profile) return <p className="text-center mt-10 text-red-500">GitHub profile not found</p>;
 
   const renderHeatmap = () => (
     <div className="flex space-x-0.5 overflow-x-auto py-2">
-      {contributions.weeks.map((week, wIdx) => (
+      {contributions?.weeks?.map((week, wIdx) => (
         <div key={wIdx} className="flex flex-col space-y-0.5">
-          {week.contributionDays.map((day, dIdx) => (
+          {week.contributionDays?.map((day, dIdx) => (
             <div
               key={dIdx}
               title={`${day.date}: ${day.contributionCount} contributions`}
@@ -58,26 +60,20 @@ const GitHubProfile = () => {
   );
 
   const renderLanguages = () => {
-    const totalSize = Object.values(languages).reduce(
-      (sum, val) => sum + val,
-      0
-    );
-
+    const total = Object.values(languages || {}).reduce((sum, val) => sum + val, 0);
     return (
       <div className="space-y-2">
-        {Object.entries(languages)
+        {Object.entries(languages || {})
           .sort((a, b) => b[1] - a[1])
-          .map(([lang, size], idx) => (
+          .map(([lang, count], idx) => (
             <div key={idx}>
               <p className="text-sm font-medium">
-                {lang} ({((size / totalSize) * 100).toFixed(1)}%)
+                {lang} ({((count / total) * 100).toFixed(1)}%)
               </p>
               <div className="w-full bg-gray-200 h-2 rounded">
                 <div
                   className="h-2 rounded bg-yellow-400"
-                  style={{
-                    width: `${((size / totalSize) * 100).toFixed(1)}%`,
-                  }}
+                  style={{ width: `${((count / total) * 100).toFixed(1)}%` }}
                 />
               </div>
             </div>
@@ -88,7 +84,7 @@ const GitHubProfile = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Profile Section */}
+      {/* Profile */}
       <Card>
         <CardHeader>
           <CardTitle>GitHub Profile</CardTitle>
@@ -100,15 +96,15 @@ const GitHubProfile = () => {
             className="w-24 h-24 rounded-full border"
           />
           <div>
-            <h2 className="text-xl font-bold">{profile.name}</h2>
+            <h2 className="text-xl font-bold">{profile.name || profile.login}</h2>
             <p className="text-gray-600">@{profile.login}</p>
-            <p>{profile.bio}</p>
+            <p>{profile.bio || "No bio available"}</p>
             <p className="text-sm text-gray-500">
               Followers: {profile.followers} • Following: {profile.following}
             </p>
             <p className="text-sm text-gray-500">
-              Total Contributions: {contributions.totalContributions} • Commits:{" "}
-              {contributions.totalCommits}
+              Total Contributions: {contributions?.totalContributions || 0} • Commits:{" "}
+              {contributions?.totalCommits || 0}
             </p>
             <a
               href={`https://github.com/${profile.login}`}
@@ -122,13 +118,13 @@ const GitHubProfile = () => {
         </CardContent>
       </Card>
 
-      {/* Top Repos Section */}
+      {/* Top Repos */}
       <Card>
         <CardHeader>
           <CardTitle>Top Repositories</CardTitle>
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-4">
-          {topRepos.map((repo, idx) => (
+          {topRepos?.map((repo, idx) => (
             <div
               key={idx}
               className="p-4 border rounded-lg shadow-sm hover:shadow-md transition"
@@ -143,17 +139,10 @@ const GitHubProfile = () => {
                   {repo.name}
                 </a>
               </h3>
-              <p className="text-sm text-gray-600">
-                {repo.description || "No description"}
-              </p>
+              <p className="text-sm text-gray-600">{repo.description || "No description"}</p>
               <p className="text-xs text-gray-500 mt-1">
-                ⭐ {repo.stars} | 🍴 {repo.forks}
+                ⭐ {repo.stars} | 🍴 {repo.forks} | {repo.language || "Unknown"}
               </p>
-              {repo.languages.length > 0 && (
-                <p className="text-xs text-gray-400 mt-1">
-                  {repo.languages.map((l) => l.name).join(", ")}
-                </p>
-              )}
             </div>
           ))}
         </CardContent>
