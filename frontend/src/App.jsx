@@ -17,6 +17,8 @@ import AllContributors from "./Components/AllContributors";
 import Login from "./Components/auth/Login";
 import Register from "./Components/auth/Register";
 import Profile from "./Components/profile/Profile";
+import ForgotPassword from "./Components/auth/ForgotPassword";
+import ResetPassword from "./Components/auth/ResetPassword";
 import ProtectedRoute from "./Components/auth/ProtectedRoute";
 import Dashboard from "./Components/Dashboard";
 import Pomodoro from "./Components/DashBoard/Pomodoro";
@@ -130,6 +132,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pomodoro" element={<Pomodoro />} />
