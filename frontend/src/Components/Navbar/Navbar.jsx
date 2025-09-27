@@ -69,8 +69,12 @@ const Navbar = () => {
           style={{ background: "var(--card)", borderColor: "var(--border)" }}
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between">
+            {/* Logo */}
             <Link to="/">
-              <h1 className="text-4xl font-extrabold" style={{ color: "var(--primary)" }}>
+              <h1
+                className="text-4xl font-extrabold tracking-tight hover:scale-105 transition-transform duration-300"
+                style={{ color: "var(--primary)" }}
+              >
                 DevSync
               </h1>
             </Link>
@@ -82,57 +86,54 @@ const Navbar = () => {
                   <a
                     key={item.name}
                     href={item.link}
-                    className="flex items-center gap-2 text-[17px] font-medium transition duration-200"
+                    className="relative text-[17px] font-medium transition-all duration-300 group"
                     style={{ color: "var(--card-foreground)" }}
                   >
                     {item.icon} {item.name}
+                    <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                   </a>
                 ))}
 
               {isAuthenticated && isRunning && (
                 <div
                   onClick={() => navigate("/pomodoro")}
-                  className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded-lg transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md hover:shadow-[var(--primary)]/30"
                 >
-                  <Clock className="w-5 h-5 text-blue-500" />
+                  <Clock className="w-5 h-5 text-blue-500 animate-pulse" />
                   <span className="text-sm font-mono">{displayTime}</span>
                 </div>
               )}
 
-              {isAuthenticated && (
+              {/* Auth Section */}
+              {isAuthenticated ? (
                 <div className="flex items-center gap-3 ml-4">
                   <Link
                     to="/profile"
-                    className="flex items-center gap-2 text-[17px] font-medium transition duration-200"
+                    className="flex items-center gap-2 text-[17px] font-medium relative group"
                     style={{ color: "var(--primary)" }}
                   >
                     <UserCircle className="h-4 w-4" /> Profile
+                    <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="text-[17px] font-medium transition duration-200 text-red-500"
+                    className="text-[17px] font-medium text-red-500 transition-colors duration-300 hover:text-red-600"
                   >
                     Logout
                   </button>
                   <DarkModeToggle />
                 </div>
-              )}
-
-              {!isAuthenticated && (
+              ) : (
                 <div className="flex items-center gap-3 ml-4">
-                  <Link
-                    to="/login"
-                    className="flex items-center gap-2 px-4 py-2 transition duration-200"
-                    style={{ color: "var(--primary)" }}
-                  >
-                    Login
+                  <Link to="/login">
+                    <button className="px-4 py-2 rounded-md text-[15px] font-medium text-[var(--primary)] relative overflow-hidden transition-all duration-300 before:absolute before:inset-0 before:bg-[var(--primary)] before:scale-x-0 before:origin-left before:transition-transform before:duration-300 hover:before:scale-x-100 hover:text-[var(--primary-foreground)]">
+                      <span className="relative z-10">Login</span>
+                    </button>
                   </Link>
-                  <Link
-                    to="/register"
-                    className="flex items-center gap-2 px-6 py-2 rounded-lg transition duration-200"
-                    style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
-                  >
-                    Sign Up
+                  <Link to="/register">
+                    <button className="px-6 py-2 rounded-md font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                      Sign Up
+                    </button>
                   </Link>
                   <DarkModeToggle />
                 </div>
@@ -170,25 +171,22 @@ const Navbar = () => {
                         <a
                           key={item.name}
                           href={item.link}
-                          className="flex items-center gap-2 text-[17px] font-medium"
+                          className="relative text-[16px] font-medium transition-all duration-300 group"
                           style={{ color: "var(--card-foreground)" }}
                         >
                           {item.icon} {item.name}
+                          <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                         </a>
                       ))}
-                      <Link
-                        to="/login"
-                        className="flex items-center gap-2 px-4 py-2 transition duration-200"
-                        style={{ color: "var(--primary)" }}
-                      >
-                        Login
+                      <Link to="/login">
+                        <button className="w-full mt-2 px-4 py-2 rounded-md text-[15px] font-medium relative overflow-hidden text-[var(--primary)] transition-all duration-300 before:absolute before:inset-0 before:bg-[var(--primary)] before:scale-x-0 before:origin-left before:transition-transform before:duration-300 hover:before:scale-x-100 hover:text-[var(--primary-foreground)]">
+                          <span className="relative z-10">Login</span>
+                        </button>
                       </Link>
-                      <Link
-                        to="/register"
-                        className="flex items-center gap-2 px-6 py-2 rounded-lg transition duration-200"
-                        style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
-                      >
-                        Sign Up
+                      <Link to="/register">
+                        <button className="w-full px-6 py-2 mt-2 rounded-md font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                          Sign Up
+                        </button>
                       </Link>
                       <DarkModeToggle />
                     </>
@@ -196,23 +194,24 @@ const Navbar = () => {
                     <>
                       <Link
                         to="/profile"
-                        className="flex items-center gap-2 text-[17px] font-medium"
+                        className="relative flex items-center gap-2 text-[17px] font-medium group"
                         style={{ color: "var(--primary)" }}
                       >
                         Profile
+                        <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                       </Link>
                       {isRunning && (
                         <div
                           onClick={() => navigate("/pomodoro")}
-                          className="flex items-center gap-2 cursor-pointer"
+                          className="flex items-center gap-2 cursor-pointer hover:shadow-md hover:shadow-[var(--primary)]/30 transition-all duration-300"
                         >
-                          <Clock className="w-5 h-5 text-blue-500" />
+                          <Clock className="w-5 h-5 text-blue-500 animate-pulse" />
                           <span className="text-sm font-mono">{displayTime}</span>
                         </div>
                       )}
                       <button
                         onClick={handleLogout}
-                        className="text-[17px] font-medium text-red-500"
+                        className="text-[17px] font-medium text-red-500 hover:text-red-600 transition-colors"
                       >
                         Logout
                       </button>
