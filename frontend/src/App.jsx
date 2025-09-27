@@ -19,6 +19,7 @@ import Register from "./Components/auth/Register";
 import Profile from "./Components/profile/Profile";
 import ProtectedRoute from "./Components/auth/ProtectedRoute";
 import Dashboard from "./Components/Dashboard";
+import FAQ from "./Components/FAQ";
 import Pomodoro from "./Components/DashBoard/Pomodoro";
 import { ArrowUp } from "lucide-react"; 
 
@@ -71,6 +72,12 @@ function Home() {
         <ScrollRevealWrapper delay={0.2}>
           <div id="contact">
             <Contact />
+          </div>
+        </ScrollRevealWrapper>
+
+        <ScrollRevealWrapper delay={0.2}>
+          <div id="FAQ">
+            <FAQ />
           </div>
         </ScrollRevealWrapper>
         <ContributorsSection/>

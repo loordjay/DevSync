@@ -1,6 +1,6 @@
 // src/Components/Navbar/Navbar.jsx
 import React, { useEffect, useState } from "react";
-import { UserCircle, Clock, Home, Sparkle, Info, Github, Phone } from "lucide-react";
+import { UserCircle, Clock, Home, Sparkle, Info, Github, Phone,HelpCircle } from "lucide-react";
 import { FloatingNav } from "../ui/floating-navbar";
 import { Link, useNavigate } from "react-router-dom";
 import DarkModeToggle from "../ui/DarkModeToggle";
@@ -12,6 +12,12 @@ const publicNavItems = [
   { name: "About us", link: "#about", icon: <Info className="h-4 w-4" /> },
   { name: "Github", link: "https://github.com/DevSyncx/DevSync.git", icon: <Github className="h-4 w-4" /> },
   { name: "Contact Us", link: "#contact", icon: <Phone className="h-4 w-4" /> },
+  {
+    name: "FAQ",
+    link: "#faq",
+    icon: <HelpCircle className="h-4 w-4" />,
+  },
+  
 ];
 
 const Navbar = () => {
