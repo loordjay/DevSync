@@ -1,6 +1,6 @@
 // src/Components/Navbar/Navbar.jsx
 import React, { useEffect, useState } from "react";
-import { UserCircle, Clock, Home, Sparkle, Info, Github, Phone,HelpCircle } from "lucide-react";
+import { UserCircle, Clock, Home, Sparkle, Info, Github, Phone, HelpCircle } from "lucide-react";
 import { FloatingNav } from "../ui/floating-navbar";
 import { Link, useNavigate } from "react-router-dom";
 import DarkModeToggle from "../ui/DarkModeToggle";
@@ -12,21 +12,14 @@ const publicNavItems = [
   { name: "About us", link: "#about", icon: <Info className="h-4 w-4" /> },
   { name: "Github", link: "https://github.com/DevSyncx/DevSync.git", icon: <Github className="h-4 w-4" /> },
   { name: "Contact Us", link: "#contact", icon: <Phone className="h-4 w-4" /> },
-  {
-    name: "FAQ",
-    link: "#faq",
-    icon: <HelpCircle className="h-4 w-4" />,
-  },
-  
+  { name: "FAQ", link: "#faq", icon: <HelpCircle className="h-4 w-4" /> },
 ];
 
 const Navbar = () => {
   const [showFloating, setShowFloating] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [displayTime, setDisplayTime] = useState("25:00");
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token")
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
 
   const navigate = useNavigate();
   const { timeLeft, isRunning } = useTimer();
@@ -48,9 +41,7 @@ const Navbar = () => {
   }, [timeLeft, isRunning]);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsAuthenticated(!!localStorage.getItem("token"));
-    };
+    const handleStorageChange = () => setIsAuthenticated(!!localStorage.getItem("token"));
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
@@ -86,10 +77,10 @@ const Navbar = () => {
                   <a
                     key={item.name}
                     href={item.link}
-                    className="relative text-[17px] font-medium transition-all duration-300 group"
+                    className="relative text-[17px] font-medium transition-all duration-300 group flex items-center gap-2"
                     style={{ color: "var(--card-foreground)" }}
                   >
-                    {item.icon} {item.name}
+                    {item.icon} <span>{item.name}</span>
                     <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                   </a>
                 ))}
@@ -112,7 +103,7 @@ const Navbar = () => {
                     className="flex items-center gap-2 text-[17px] font-medium relative group"
                     style={{ color: "var(--primary)" }}
                   >
-                    <UserCircle className="h-4 w-4" /> Profile
+                    <UserCircle className="h-4 w-4" /> <span>Profile</span>
                     <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                   </Link>
                   <button
@@ -171,10 +162,10 @@ const Navbar = () => {
                         <a
                           key={item.name}
                           href={item.link}
-                          className="relative text-[16px] font-medium transition-all duration-300 group"
+                          className="relative text-[16px] font-medium transition-all duration-300 group flex items-center gap-2"
                           style={{ color: "var(--card-foreground)" }}
                         >
-                          {item.icon} {item.name}
+                          {item.icon} <span>{item.name}</span>
                           <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                         </a>
                       ))}
@@ -197,7 +188,7 @@ const Navbar = () => {
                         className="relative flex items-center gap-2 text-[17px] font-medium group"
                         style={{ color: "var(--primary)" }}
                       >
-                        Profile
+                        <UserCircle className="h-4 w-4" /> <span>Profile</span>
                         <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-[var(--primary)] to-purple-500 transition-all duration-500 group-hover:w-full"></span>
                       </Link>
                       {isRunning && (
