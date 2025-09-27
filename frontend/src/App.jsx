@@ -48,7 +48,7 @@ function Home() {
       <Navbar />
 
       {/* Main Content */}
-  <main className="relative z-10 px-4 py-24 text-[var(--foreground)]">
+  <main className="relative z-10 px-4 pt-[108px] pb-24 text-[var(--foreground)]">
         <ScrollRevealWrapper>
           <div id="home">
             <Hero />
