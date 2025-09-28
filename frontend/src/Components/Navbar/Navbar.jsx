@@ -63,9 +63,7 @@ const Navbar = () => {
   }, [timeLeft, isRunning]);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsAuthenticated(!!localStorage.getItem("token"));
-    };
+    const handleStorageChange = () => setIsAuthenticated(!!localStorage.getItem("token"));
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
