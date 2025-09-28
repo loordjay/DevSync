@@ -40,7 +40,7 @@ const Footer = () => {
           <h4 className="text-lg font-semibold mb-3" style={{ color: "var(--primary)" }}>Connect</h4>
           <div className="flex items-center gap-4 mt-2" style={{ color: "var(--primary)" }}>
             <a
-              href="https://github.com/devsync-org"
+              href="https://github.com/DevSyncx/DevSync"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-blue-400"
