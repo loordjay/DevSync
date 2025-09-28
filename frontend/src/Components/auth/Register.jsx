@@ -82,7 +82,8 @@ const Register = () => {
             email: formData.email,
             password: formData.password,
           }),
-        }
+        },
+        
       );
 
       let data;
