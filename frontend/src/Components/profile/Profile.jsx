@@ -154,8 +154,28 @@ const Profile = () => {
     }
   };
 
+  function normalizeLeetcodeURL(url) {
+    const leetcodeRegex = /^https?:\/\/(www\.)?leetcode\.com\/(u\/)?[a-zA-Z0-9_-]+\/?$/;
+    if (!leetcodeRegex.test(url)) {
+      return null;
+    }
+    return url.replace(/\/$/, '');
+  }
+  const leetcodeUrl = (url) => {
+    url = normalizeLeetcodeURL(url);
+    const username = url.split("/").pop();
+    return `/leetcode/${username}`
+  }
+
   const handleSaveProfile = async () => {
     setIsSaving(true);
+    let leetcodeUrl = editData.socialLinks?.leetcode.trim();
+    let res = normalizeLeetcodeURL(leetcodeUrl)
+    if (!res) {
+      setError("Leetcode Profile Url Must be valid")
+      setIsSaving(false)
+      return;
+    }
 
     try {
       const token = localStorage.getItem('token');
@@ -237,6 +257,7 @@ const Profile = () => {
       alert(error.message || "Failed to update profile. Please try again.");
     } finally {
       setIsSaving(false);
+      setError("")
     }
   };
 
@@ -255,7 +276,7 @@ const Profile = () => {
         }`}
       onClick={() => {
         if (buttonUrl) {
-          window.open(buttonUrl, "_blank", "noopener,noreferrer");
+          window.open((buttonName == 'Leetcode' ? leetcodeUrl(buttonUrl) : buttonUrl), "_blank", "noopener,noreferrer");
         }
       }}
       title={buttonUrl ? `Go to ${buttonName} Profile` : "Not Linked"}
@@ -271,26 +292,27 @@ const Profile = () => {
       <label className="text-md font-semibold text-[#1D3557] ">{labelName}</label>
       <div className="flex">
 
-        <span className="bg-gray-100 px-2 py-2 rounded-l-lg border border-r-0 border-[#C5D7E5]">
-          {icon}</span> 
-        <input
-          type="text"
-          name={name}
-          value={editData.socialLinks?.[linkName] || ""}
-          onChange={(e) => {
-            setEditData({
-              ...editData,
-              socialLinks: {
-                ...editData.socialLinks,
-                [linkName]: e.target.value
-              }
-            });
-          }}
-          className="w-full px-3 py-2 bg-white/70 border border-[#C5D7E5] rounded-r-lg"
-        />
-      </div>
-    </>
-  }
+        <span className="bg-gray-100 px-2 py-2 rounded-l-lg border border-r-0 border-[#C5D7E5]">
+          {icon}</span> 
+        <input
+          type="text"
+          name={name}
+          value={editData.socialLinks?.[linkName] || ""}
+          onChange={(e) => {
+            setEditData({
+              ...editData,
+              socialLinks: {
+                ...editData.socialLinks,
+                [linkName]: e.target.value
+              }
+            });
+          }}
+          className="w-full px-3 py-2 bg-white/70 border border-[#C5D7E5] rounded-r-lg"
+        />
+      </div>
+      {linkName == 'leetcode' && <p className="text-red-500">{error}</p>}
+    </>
+  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#E4ECF1] to-[#D2DEE7]">
