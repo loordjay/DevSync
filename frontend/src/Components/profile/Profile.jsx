@@ -1,22 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-// Assuming these are available, adjust paths if necessary
 import Navbar from "../Navbar/Navbar"; 
 import { Camera, RefreshCw, MapPin, Mail, Link, X, Plus, User, Code, Briefcase, Settings, ArrowRight } from "lucide-react";
 import { SiLeetcode, SiCodechef, SiHackerrank, SiHackerearth, SiCodeforces, SiLinkedin, SiGitlab, SiGithub } from "react-icons/si";
-import { Button } from "../ui/button"; // Assuming a robust Button component
+import { Button } from "../ui/button";
 
 // --- Configuration & Utility ---
 
-// Use semantic Tailwind classes mapped to your CSS Variables
 const PRIMARY_TEXT = "text-primary";
 const CARD_BG = "bg-card";
 const BORDER_COLOR = "border-border";
 const INPUT_BG = "bg-input";
 const RING_COLOR = "focus:ring-ring";
 
-// Icon mapping - using foreground and primary/accent colors for visibility
 const socialIcons = {
   github: <SiGithub className="w-5 h-5 text-foreground" />,
   gitlab: <SiGitlab className="w-5 h-5 text-accent" />,
@@ -29,7 +26,6 @@ const socialIcons = {
   hackerearth: <SiHackerearth className="w-5 h-5 text-chart-3" />,
 };
 
-// Section Card: Uses CARD_BG for the component's background
 const SectionCard = ({ title, icon: Icon, children, className = "", delay = 0.1 }) => (
   <motion.div
     initial={{ opacity: 0, y: 10 }}
@@ -45,29 +41,30 @@ const SectionCard = ({ title, icon: Icon, children, className = "", delay = 0.1 
   </motion.div>
 );
 
-const Profile = () => {
-  const [profileData, setProfileData] = useState({
-    name: "",
-    email: "",
-    bio: "",
-    location: "",
-    avatar: "/uploads/avatars/default-avatar.png",
-    socialLinks: {
-      github: "",
-      gitlab: "",
-      linkedin: "",
-      website: "",
-      codechef: "",
-      hackerrank: "",
-      leetcode: "",
-      codeforces: "",
-      hackerearth: ""
-    },
-    skills: []
-  });
+const defaultProfileData = {
+  name: "",
+  email: "",
+  bio: "",
+  location: "",
+  avatar: "/uploads/avatars/default-avatar.png",
+  socialLinks: {
+    github: "",
+    gitlab: "",
+    linkedin: "",
+    website: "",
+    codechef: "",
+    hackerrank: "",
+    leetcode: "",
+    codeforces: "",
+    hackerearth: ""
+  },
+  skills: []
+};
 
+const Profile = () => {
+  const [profileData, setProfileData] = useState(defaultProfileData);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ ...profileData });
+  const [editData, setEditData] = useState(defaultProfileData);
   const [isSaving, setIsSaving] = useState(false);
   const [currentSkill, setCurrentSkill] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -78,7 +75,6 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch user profile data from the backend
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -98,8 +94,19 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        setProfileData(data);
-        setEditData(data);
+
+        const mergedData = {
+          ...defaultProfileData,
+          ...data,
+          socialLinks: {
+            ...defaultProfileData.socialLinks,
+            ...(data.socialLinks || {})
+          },
+          skills: data.skills || []
+        };
+
+        setProfileData(mergedData);
+        setEditData(mergedData);
         setIsLoading(false);
       } catch (err) {
         console.error('Error fetching profile:', err);
@@ -127,8 +134,7 @@ const Profile = () => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
-      
-      // If there's an avatar file, upload it first
+
       if (avatarFile) {
         const formData = new FormData();
         formData.append('avatar', avatarFile);
@@ -149,7 +155,6 @@ const Profile = () => {
         editData.avatar = uploadData.avatarUrl;
       }
 
-      // Update profile data
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/profile`, {
         method: 'PUT',
         headers: {
@@ -164,7 +169,18 @@ const Profile = () => {
       }
 
       const data = await response.json();
-      setProfileData(data);
+
+      const mergedData = {
+        ...defaultProfileData,
+        ...data,
+        socialLinks: {
+          ...defaultProfileData.socialLinks,
+          ...(data.socialLinks || {})
+        },
+        skills: data.skills || []
+      };
+
+      setProfileData(mergedData);
       setIsEditing(false);
       setAvatarFile(null);
       setAvatarPreview(null);
@@ -262,7 +278,6 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 py-8 sm:py-12 max-w-6xl">
-        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -278,9 +293,7 @@ const Profile = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-          {/* Left Column - Avatar and Quick Info */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Avatar Card */}
             <SectionCard delay={0.1} className="text-center">
               <div className="relative inline-block mb-4">
                 <motion.img
@@ -362,7 +375,6 @@ const Profile = () => {
               )}
             </SectionCard>
 
-            {/* Contact Info Card */}
             <SectionCard title="Contact Info" icon={User} delay={0.2}>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
@@ -422,9 +434,7 @@ const Profile = () => {
             </SectionCard>
           </div>
 
-          {/* Right Column - Details */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Bio Section */}
             <SectionCard title="About Me" icon={User} delay={0.3}>
               {isEditing ? (
                 <textarea
@@ -442,7 +452,6 @@ const Profile = () => {
               )}
             </SectionCard>
 
-            {/* Skills Section */}
             <SectionCard title="Technical Skills" icon={Code} delay={0.4}>
               <p className="text-muted-foreground text-sm mb-4">
                 Add your technical skills and technologies you're proficient in
@@ -478,6 +487,7 @@ const Profile = () => {
                         <button
                           onClick={() => handleRemoveSkill(skill)}
                           className="hover:text-destructive transition-colors"
+                          type="button"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -490,7 +500,6 @@ const Profile = () => {
               </div>
             </SectionCard>
 
-            {/* Social Links Section */}
             <SectionCard title="Social & Coding Profiles" icon={Briefcase} delay={0.5}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {Object.entries(socialIcons).map(([platform, icon]) => (
@@ -500,12 +509,12 @@ const Profile = () => {
                       {isEditing ? (
                         <input
                           type="url"
-                          value={editData.socialLinks[platform] || ""}
+                          value={editData.socialLinks?.[platform] ?? ""}
                           onChange={(e) => handleSocialLinkChange(platform, e.target.value)}
                           className={`w-full px-3 py-2 rounded-lg ${INPUT_BG} ${BORDER_COLOR} border ${RING_COLOR} focus:ring-2 focus:outline-none text-foreground text-sm`}
                           placeholder={`${platform.charAt(0).toUpperCase() + platform.slice(1)} URL`}
                         />
-                      ) : profileData.socialLinks[platform] ? (
+                      ) : profileData.socialLinks?.[platform] ? (
                         <a
                           href={profileData.socialLinks[platform]}
                           target="_blank"

@@ -7,6 +7,7 @@ import { Camera, RefreshCw, MapPin, Mail, Link, X, Plus, User, Code, Briefcase, 
 import { SiLeetcode, SiCodechef, SiHackerrank, SiHackerearth, SiCodeforces, SiLinkedin, SiGitlab, SiGithub } from "react-icons/si";
 import { Button } from "../ui/button"; // Assuming a robust Button component
 
+
 // --- Configuration & Utility ---
 
 // Use semantic Tailwind classes mapped to your CSS Variables
@@ -45,29 +46,30 @@ const SectionCard = ({ title, icon: Icon, children, className = "", delay = 0.1 
   </motion.div>
 );
 
-const Profile = () => {
-  const [profileData, setProfileData] = useState({
-    name: "",
-    email: "",
-    bio: "",
-    location: "",
-    avatar: "/uploads/avatars/default-avatar.png",
-    socialLinks: {
-      github: "",
-      gitlab: "",
-      linkedin: "",
-      website: "",
-      codechef: "",
-      hackerrank: "",
-      leetcode: "",
-      codeforces: "",
-      hackerearth: ""
-    },
-    skills: []
-  });
+const defaultProfileData = {
+  name: "",
+  email: "",
+  bio: "",
+  location: "",
+  avatar: "/uploads/avatars/default-avatar.png",
+  socialLinks: {
+    github: "",
+    gitlab: "",
+    linkedin: "",
+    website: "",
+    codechef: "",
+    hackerrank: "",
+    leetcode: "",
+    codeforces: "",
+    hackerearth: ""
+  },
+  skills: []
+};
 
+const Profile = () => {
+  const [profileData, setProfileData] = useState(defaultProfileData);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ ...profileData });
+  const [editData, setEditData] = useState(defaultProfileData);
   const [isSaving, setIsSaving] = useState(false);
   const [currentSkill, setCurrentSkill] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -98,8 +100,20 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        setProfileData(data);
-        setEditData(data);
+
+        // Merge defaults to prevent undefined socialLinks etc
+        const mergedData = {
+          ...defaultProfileData,
+          ...data,
+          socialLinks: {
+            ...defaultProfileData.socialLinks,
+            ...(data.socialLinks || {})
+          },
+          skills: data.skills || []
+        };
+
+        setProfileData(mergedData);
+        setEditData(mergedData);
         setIsLoading(false);
       } catch (err) {
         console.error('Error fetching profile:', err);
@@ -164,7 +178,19 @@ const Profile = () => {
       }
 
       const data = await response.json();
-      setProfileData(data);
+
+      // Merge defaults again to be safe on updated data
+      const mergedData = {
+        ...defaultProfileData,
+        ...data,
+        socialLinks: {
+          ...defaultProfileData.socialLinks,
+          ...(data.socialLinks || {})
+        },
+        skills: data.skills || []
+      };
+
+      setProfileData(mergedData);
       setIsEditing(false);
       setAvatarFile(null);
       setAvatarPreview(null);
@@ -478,6 +504,7 @@ const Profile = () => {
                         <button
                           onClick={() => handleRemoveSkill(skill)}
                           className="hover:text-destructive transition-colors"
+                          type="button"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -500,12 +527,12 @@ const Profile = () => {
                       {isEditing ? (
                         <input
                           type="url"
-                          value={editData.socialLinks[platform] || ""}
+                          value={editData.socialLinks?.[platform] ?? ""}
                           onChange={(e) => handleSocialLinkChange(platform, e.target.value)}
                           className={`w-full px-3 py-2 rounded-lg ${INPUT_BG} ${BORDER_COLOR} border ${RING_COLOR} focus:ring-2 focus:outline-none text-foreground text-sm`}
                           placeholder={`${platform.charAt(0).toUpperCase() + platform.slice(1)} URL`}
                         />
-                      ) : profileData.socialLinks[platform] ? (
+                      ) : profileData.socialLinks?.[platform] ? (
                         <a
                           href={profileData.socialLinks[platform]}
                           target="_blank"
