@@ -15,12 +15,13 @@ const GitHubCard = ({ githubUsername }) => {
 
     const checkGitHubUser = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/github/${githubUsername}`
-        );
-        if (res.ok) setValidUser(true);
-        else setValidUser(false);
-      } catch {
+        const backendUrl =
+          import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const res = await fetch(`${backendUrl}/api/github/${githubUsername}`);
+        const json = await res.json();
+        setValidUser(res.ok && !json.error);
+      } catch (err) {
+        console.error(err);
         setValidUser(false);
       } finally {
         setLoading(false);

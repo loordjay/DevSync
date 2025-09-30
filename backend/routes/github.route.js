@@ -1,3 +1,4 @@
+// routes/github.route.js
 const express = require("express");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -5,6 +6,10 @@ const router = express.Router();
 
 // Helper function to run GraphQL query
 const runGraphQL = async (query, variables = {}) => {
+  if (!process.env.GITHUB_TOKEN) {
+    throw new Error("GitHub token not configured in environment variables");
+  }
+
   const response = await fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
@@ -93,11 +98,23 @@ router.get("/:username", async (req, res) => {
         })),
       }));
 
-    // Aggregate languages across all repos by size
+    // Aggregate languages across all repos by size → return array
     const languages = {};
     user.repositories.nodes.forEach((repo) => {
       repo.languages.edges.forEach(({ node, size }) => {
         languages[node.name] = (languages[node.name] || 0) + size;
+      });
+    });
+    const languagesArray = Object.entries(languages).map(([name, size]) => ({
+      name,
+      size,
+    }));
+
+    // Flatten contribution days for easier frontend rendering
+    const allContributionDays = [];
+    user.contributionsCollection.contributionCalendar.weeks.forEach((week) => {
+      week.contributionDays.forEach((day) => {
+        allContributionDays.push(day);
       });
     });
 
@@ -115,12 +132,12 @@ router.get("/:username", async (req, res) => {
         totalContributions:
           user.contributionsCollection.contributionCalendar.totalContributions,
         totalCommits: user.contributionsCollection.totalCommitContributions,
-        weeks: user.contributionsCollection.contributionCalendar.weeks,
+        heatmap: allContributionDays, // flattened heatmap array
       },
-      languages,
+      languages: languagesArray, // array for frontend use
     });
   } catch (err) {
-    console.error(err);
+    console.error("GitHub API error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
