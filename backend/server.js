@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const session = require("express-session");
+require("./utils/leetcodeCron");
 const passport = require("passport");
 
 // Database connection

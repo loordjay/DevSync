@@ -24,6 +24,7 @@ import Dashboard from "./Components/Dashboard";
 import FAQ from "./Components/FAQ";
 import Pomodoro from "./Components/DashBoard/Pomodoro";
 import { ArrowUp } from "lucide-react"; 
+import LeetCode from "./Components/DashBoard/LeetCode";
 
 function Home() {
   const [showTop, setShowTop] = useState(false);
@@ -145,6 +146,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pomodoro" element={<Pomodoro />} />
         <Route path='/contributors' element={<AllContributors/>}/>
+        <Route path="/leetcode/:leetUser" element={<LeetCode />} />
     </Routes>
     </TimerProvider>
   );

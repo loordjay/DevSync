@@ -2,6 +2,18 @@ import { User, ExternalLink, Verified, Star, Activity } from "lucide-react";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import CardWrapper from "./CardWrapper";
+import {
+  SiLeetcode, SiCodechef, SiHackerrank, SiGithub, SiHackerearth, SiLinkedin,
+} from "react-icons/si";
+
+const iconMap = {
+  leetcode: SiLeetcode,
+  codechef: SiCodechef,
+  hackerrank: SiHackerrank,
+  hackerearth: SiHackerearth,
+  github: SiGithub,
+  linkedin: SiLinkedin,
+};
 
 export default function ProfileCard({ user }) {
   const [isHovered, setIsHovered] = useState(false);
