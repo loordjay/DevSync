@@ -17,8 +17,11 @@ import AllContributors from "./Components/AllContributors";
 import Login from "./Components/auth/Login";
 import Register from "./Components/auth/Register";
 import Profile from "./Components/profile/Profile";
+import ForgotPassword from "./Components/auth/ForgotPassword";
+import ResetPassword from "./Components/auth/ResetPassword";
 import ProtectedRoute from "./Components/auth/ProtectedRoute";
 import Dashboard from "./Components/Dashboard";
+import FAQ from "./Components/FAQ";
 import Pomodoro from "./Components/DashBoard/Pomodoro";
 import { ArrowUp } from "lucide-react";
 import GitHubProfile from "./Components/GitHubProfile";
@@ -41,7 +44,8 @@ function Home() {
     <div className="min-h-screen w-full bg-[var(--background)] scroll-smooth overflow-hidden">
       <Navbar />
 
-      <main className="relative z-10 px-4 py-24 text-[var(--foreground)]">
+      {/* Main Content */}
+      <main className="relative z-10 px-4 pt-[108px] pb-24 text-[var(--foreground)]">
         <ScrollRevealWrapper>
           <div id="home">
             <Hero />
@@ -65,6 +69,12 @@ function Home() {
         <ScrollRevealWrapper delay={0.2}>
           <div id="contact">
             <Contact />
+          </div>
+        </ScrollRevealWrapper>
+
+        <ScrollRevealWrapper delay={0.2}>
+          <div id="FAQ">
+            <FAQ />
           </div>
         </ScrollRevealWrapper>
 
@@ -106,6 +116,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route
           path="/profile"
           element={
