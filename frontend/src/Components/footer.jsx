@@ -53,17 +53,8 @@ const Footer = () => {
             >
               <Mail className="w-5 h-5" />
             </a>
-            
             <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-blue-400"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
-            <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/annanyatiwary4"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-blue-400"
@@ -73,7 +64,7 @@ const Footer = () => {
 
             {/* ✅ Twitter (X) logo */}
             <a
-              href="https://twitter.com"
+              href="https://x.com/Annan_ya"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-blue-400"
@@ -91,9 +82,15 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="mt-12 pt-6 text-center text-sm" style={{ borderTop: "1px solid var(--border)", color: "var(--muted-foreground)" }}>
-        © {new Date().getFullYear()} DevSync. All rights reserved.
-      </div>
+      <div
+          className="mt-12 pt-6 text-center text-sm space-y-1"
+          style={{ borderTop: "1px solid var(--border)", color: "var(--muted-foreground)" }}
+        >
+          <p>© {new Date().getFullYear()} DevSync. All rights reserved.</p>
+          <p>
+            Made with ☕ by <span className="font-semibold text-[var(--primary)]">Annanya</span>
+          </p>
+        </div>
     </footer>
   );
 };
