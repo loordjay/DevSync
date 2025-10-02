@@ -486,7 +486,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-background">
+    // Outer Container: Full Viewport Height
+    <div className="h-screen w-full bg-background flex flex-col">
       <Navbar />
       
       {/* Success Popup */}
@@ -496,14 +497,16 @@ const Profile = () => {
         userName={profileData.name}
       />
 
-      <div className="pt-28 pb-12 px-4">
-        {/* Header Section */}
+      {/* Content Wrapper: Flex-grow to fill space below Navbar, using full width */}
+      <div className="flex-grow overflow-y-auto mt-[72px] pb-12 pt-6 px-4 md:px-12">
+        
+        {/* Header Section: Removed max-w-6xl mx-auto */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-6xl mx-auto mb-8"
+          className="mb-8 text-center"
         >
-          <div className="text-center space-y-3">
+          <div className="space-y-3">
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               Developer Profile
             </h1>
@@ -513,16 +516,18 @@ const Profile = () => {
           </div>
         </motion.div>
 
-        {/* Main Profile Card */}
+        {/* Main Profile Content Container (Removed Card Styling and max-w-6xl) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="max-w-6xl mx-auto"
+          className="w-full" // Use full width
         >
-          <div className="bg-card border-2 border-border rounded-3xl shadow-2xl shadow-primary/5 overflow-hidden">
-            {/* Card Header with Actions */}
-            <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent px-6 md:px-8 py-6 border-b-2 border-border">
+          {/* Main Content Div (Kept overflow-hidden for safety) */}
+          <div className="overflow-hidden"> 
+            
+            {/* Header Strip with Actions (Full Width) */}
+            <div className="bg-primary/5 px-6 md:px-12 py-6 border-b-2 border-border">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
@@ -595,13 +600,13 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Profile Content */}
-            <div className="p-6 md:p-8">
+            {/* Profile Content Details */}
+            <div className="p-6 md:p-12">
               <div className="grid md:grid-cols-12 gap-8">
                 {/* Left Sidebar - Avatar and Name (Sticky) */}
                 <div className="md:col-span-4">
-                  <div className="sticky top-24 space-y-8">
-                    {/* Avatar Block */}
+                  <div className="sticky top-20 space-y-8"> 
+                    {/* Avatar Block - Adjusted to use full width and better padding */}
                     <div className="text-center p-6 bg-secondary/30 rounded-3xl border-2 border-border shadow-lg">
                       <motion.div
                         whileHover={{ scale: isEditing ? 1.02 : 1 }}
