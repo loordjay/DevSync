@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatedGradientText } from "./ui/animated-gradient-text";
+import { ScrollProgress } from "./ui/scroll-progress";
 
 const Hero = () => {
   const textRef = useRef(null);
@@ -22,11 +23,13 @@ const Hero = () => {
   };
 
   return (
-    <section
+    <section 
+   
       id="home"
       className="relative w-full min-h-[78vh] px-6 py-20 flex items-center justify-center overflow-hidden rounded-3xl border border-white/50 bg-gradient-to-b from-white to-sky-50 shadow-2xl"
     style={{ background: "var(--background)", color: "var(--foreground)" }}
     >
+      <ScrollProgress />
       {/* subtle corner accents */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-3 top-3 h-10 w-20 rounded-tl-2xl border-l border-t border-sky-200/70" />
